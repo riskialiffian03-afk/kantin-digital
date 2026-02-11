@@ -1,0 +1,29 @@
+<?php
+session_start();
+include "koneksi.php";
+
+if(isset($_POST['username']) && isset($_POST['password'])){
+
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
+    $data = mysqli_fetch_assoc($query);
+
+    if($data){
+        if(password_verify($password, $data['password'])){
+            $_SESSION['username'] = $data['username'];
+            $_SESSION['role'] = $data['role'];
+            header("Location: menu.php");
+            exit;
+        } else {
+            echo "Password salah!";
+        }
+    } else {
+        echo "Username tidak ditemukan!";
+    }
+
+} else {
+    echo "Akses tidak valid!";
+}
+?>
